@@ -3,12 +3,16 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Form from '@/app/components/ui/form/Form';
+import Input from '@/app/components/ui/form/Input';
+import Button from '@/app/components/ui/form/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const LoginPage = () => {
     const { login, user } = useContext(AuthContext);
     const router = useRouter();
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -23,49 +27,63 @@ const LoginPage = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await login(username, password);
+            await login(email, password);
             router.push('/');
         } catch (err) {
+            console.log(err);
             setError(err.message);
         }
         setLoading(false);
     };
 
     return (
-        <div className="w-full max-w-sm p-8 bg-white rounded-sm shadow-xl">
-            <h1 className="text-2xl font-bold mb-6 text-center">Giriş Yap</h1>
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <form onSubmit={handleSubmit} className="flex flex-col">
-                <input
-                    type="text"
-                    placeholder="Kullanıcı Adı"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                    className="mb-4 p-2 border rounded-sm"
-                />
-                <input
-                    type="password"
-                    placeholder="Şifre"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="mb-4 p-2 border rounded-sm"
-                />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-sm hover:bg-blue-600 disabled:opacity-50"
-                >
-                    {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
-                </button>
-            </form>
-            <p className="mt-4 text-center">
-                Hesabınız yok mu?{' '}
-                <Link href="/register" className="text-blue-500 hover:underline">
-                    Kayıt Ol
-                </Link>
-            </p>
+        <div className='w-full min-h-screen p-8 flex flex-wrap'>
+            <div className='w-1/2 p-8 bg-blue-700'>
+                <div className='w-full h-full flex justify-center items-center'>
+                    <Image
+                        src='/logo/logo.svg'
+                        alt='Login Image'
+                        width={100}
+                        height={100}
+                    />
+                </div>
+            </div>
+            <div className='w-1/2 p-8 flex justify-center items-center bg-gray-50'>
+                <div className="w-full max-w-xs">
+                    <div className='mb-4 text-center'>
+                        <h1 className="text-2xl font-bold mb-2">Sign In</h1>
+                        <p className='text-sm'>Sign in to your account to continue</p>
+                    </div>
+                    {error && <p className="text-red-500 mb-4 text-xs">{error}</p>}
+                    <Form onSubmit={handleSubmit} className="flex flex-col">
+                        <Input
+                            label="E-mail"
+                            name="email"
+                            type="email"
+                            placeholder="E-mail"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Input
+                            label="Password"
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <Button type="submit" variant="primary">
+                            {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
+                        </Button>
+                    </Form>
+                    <p className="mt-4 text-center text-xs">
+                        Hesabınız yok mu?{' '}
+                        <Link href="/register" className="text-blue-500 hover:underline">
+                            Kayıt Ol
+                        </Link>
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };

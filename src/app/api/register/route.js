@@ -5,25 +5,27 @@ import clientPromise from '@/app/lib/mongodb';
 import { hash } from 'bcryptjs';
 
 export async function POST(request) {
-    const { username, password, name, role } = await request.json();
+    const { password, email, username, firstname, lastname, role } = await request.json();
 
     try {
         const client = await clientPromise;
         const db = client.db('siteanalysis');
         const usersCollection = db.collection('users');
 
-        const existingUser = await usersCollection.findOne({ username });
+        const existingUser = await usersCollection.findOne({ email });
 
         if (existingUser) {
-            return NextResponse.json({ message: 'Bu kullanıcı adı zaten kullanılıyor' }, { status: 400 });
+            return NextResponse.json({ message: 'Bu kullanıcı zaten mevcut' }, { status: 400 });
         }
 
         const hashedPassword = await hash(password, 10);
 
         await usersCollection.insertOne({
-            username,
             password: hashedPassword,
-            name,
+            email,
+            username,
+            firstname,
+            lastname,
             role,
         });
 

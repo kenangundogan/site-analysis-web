@@ -10,9 +10,11 @@ import Link from 'next/link';
 const RegisterPage = () => {
     const { user } = useContext(AuthContext);
     const router = useRouter();
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [role] = useState('guest'); // Varsayılan olarak 'guest' rolü
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -34,16 +36,14 @@ const RegisterPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password, name, role }),
+                body: JSON.stringify({ password, email, username, firstname, lastname, role }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Kayıt başarılı, giriş sayfasına yönlendir
                 router.push('/login');
             } else {
-                // Hata mesajını göster
                 setError(data.message || 'Kayıt başarısız');
             }
         } catch (err) {
@@ -60,17 +60,33 @@ const RegisterPage = () => {
             <form onSubmit={handleSubmit} className="flex flex-col">
                 <input
                     type="text"
-                    placeholder="Adınız"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    placeholder="First Name"
+                    value={firstname}
+                    onChange={(e) => setFirstname(e.target.value)}
                     required
                     className="mb-4 p-2 border rounded-sm"
                 />
                 <input
                     type="text"
-                    placeholder="Kullanıcı Adı"
+                    placeholder="Last Name"
+                    value={lastname}
+                    onChange={(e) => setLastname(e.target.value)}
+                    required
+                    className="mb-4 p-2 border rounded-sm"
+                />
+                <input
+                    type="text"
+                    placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="mb-4 p-2 border rounded-sm"
+                />
+                <input
+                    type="text"
+                    placeholder="E-mail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                     className="mb-4 p-2 border rounded-sm"
                 />

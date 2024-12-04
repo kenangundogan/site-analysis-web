@@ -9,23 +9,23 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const TOKEN_EXPIRES_IN = process.env.TOKEN_EXPIRES_IN || '3600sn';
 
 export async function POST(request) {
-    const { username, password } = await request.json();
+    const { email, password } = await request.json();
 
     try {
         const client = await clientPromise;
         const db = client.db('siteanalysis');
         const usersCollection = db.collection('users');
 
-        const user = await usersCollection.findOne({ username });
+        const user = await usersCollection.findOne({ email });
 
         if (!user) {
-            return NextResponse.json({ message: 'Kullanıcı adı veya şifre hatalı' }, { status: 401 });
+            return NextResponse.json({ message: 'E-mail adresi veya şifre hatalı' }, { status: 401 });
         }
 
         const isPasswordValid = await compare(password, user.password);
 
         if (!isPasswordValid) {
-            return NextResponse.json({ message: 'Kullanıcı adı veya şifre hatalı' }, { status: 401 });
+            return NextResponse.json({ message: 'E-mail adresi veya şifre hatalı' }, { status: 401 });
         }
 
         const tokenPayload = {
