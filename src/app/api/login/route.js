@@ -19,13 +19,13 @@ export async function POST(request) {
         const user = await usersCollection.findOne({ email });
 
         if (!user) {
-            return NextResponse.json({ message: 'E-mail adresi veya şifre hatalı' }, { status: 401 });
+            return NextResponse.json({ email: 'E-mail adresi hatalı' }, { status: 401 });
         }
 
         const isPasswordValid = await compare(password, user.password);
 
         if (!isPasswordValid) {
-            return NextResponse.json({ message: 'E-mail adresi veya şifre hatalı' }, { status: 401 });
+            return NextResponse.json({ password: 'Şifre hatalı' }, { status: 401 });
         }
 
         const tokenPayload = {

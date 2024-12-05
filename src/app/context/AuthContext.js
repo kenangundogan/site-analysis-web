@@ -1,3 +1,5 @@
+// src/app/context/AuthContext.js
+
 'use client';
 
 import { createContext, useState, useEffect } from 'react';
@@ -77,12 +79,16 @@ export const AuthProvider = ({ children }) => {
             credentials: 'include',
         });
         const data = await response.json();
-        if (response.ok) {
-            setUser(data.user);
-            localStorage.setItem('user', JSON.stringify(data.user));
-        } else {
-            throw new Error(data.message);
+        if (!response.ok) {
+            if (data.email || data.password) {
+                throw data;
+            } else {
+                throw new Error(data.message ?? 'Bilinmeyen hata');
+            }
         }
+
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
     };
 
     const logout = async () => {
