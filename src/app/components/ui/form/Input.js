@@ -12,6 +12,7 @@ export default function Input({
     className,
     style,
     label,
+    error,
     ...props
 }) {
     return (
@@ -32,9 +33,10 @@ export default function Input({
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="appearance-none rounded-sm w-full h-14 p-4 text-gray-700 focus:outline-none"
+                className="appearance-none rounded-sm w-full h-14 p-4 border text-sm text-gray-700 focus:outline-none"
                 {...props}
             />
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
         </div>
     );
 }
