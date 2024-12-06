@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children, roles }) => {
                 router.push('/403');
             }
         }
-    }, [user, loading]);
+    }, [user, loading, roles, router]);
 
     if (loading || !user) {
         return <div>Yükleniyor...</div>;

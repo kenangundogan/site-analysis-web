@@ -27,7 +27,7 @@ const RegisterPage = () => {
         if (user) {
             router.push('/');
         }
-    }, [user]);
+    }, [user, router]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -68,7 +68,7 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className='w-full min-h-screen p-10 flex flex-wrap'>
+        <div className='w-full min-h-screen p-4 sm:p-10 flex flex-wrap'>
             <div className='w-full md:w-6/12 lg:w-8/12 p-8 bg-blue-700'>
                 <div className='w-full h-full flex justify-center items-center'>
                     <Image
