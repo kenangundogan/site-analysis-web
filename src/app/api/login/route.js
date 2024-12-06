@@ -6,7 +6,7 @@ import clientPromise from '@/app/lib/mongodb';
 import { compare } from 'bcryptjs';
 
 const SECRET_KEY = process.env.SECRET_KEY;
-const TOKEN_EXPIRES_IN = process.env.TOKEN_EXPIRES_IN || '3600sn';
+const TOKEN_EXPIRES_IN = process.env.TOKEN_EXPIRES_IN || '600s';
 
 export async function POST(request) {
     const { email, password } = await request.json();
@@ -37,12 +37,17 @@ export async function POST(request) {
         const token = jwt.sign(tokenPayload, SECRET_KEY, { expiresIn: TOKEN_EXPIRES_IN });
 
         const isProduction = process.env.NODE_ENV === 'production';
+        const sameSite = isProduction ? 'lax' : 'strict';
+        console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
+        console.log('isProduction:', isProduction);
+        console.log('sameSite:', sameSite);
+
 
         const response = NextResponse.json({ user: tokenPayload }, { status: 200 });
 
         response.cookies.set('token', token, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: sameSite,
             path: '/',
             maxAge: Number(TOKEN_EXPIRES_IN),
             secure: isProduction,
